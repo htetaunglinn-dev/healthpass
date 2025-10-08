@@ -85,7 +85,7 @@ export default function Pricing() {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Choose Your <span className="text-[#0066cc]">Healthcare Plan</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
             No discounts, just pure value. Get convenience, trust, and personalized care
             that saves you time and gives you peace of mind.
           </p>
@@ -138,7 +138,7 @@ export default function Pricing() {
               <div className="p-8">
                 {/* Tier Name */}
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
-                <p className="text-gray-600 text-sm mb-6">{tier.description}</p>
+                <p className="text-gray-700 text-sm mb-6">{tier.description}</p>
 
                 {/* Price */}
                 <div className="mb-6">
@@ -147,7 +147,7 @@ export default function Pricing() {
                       ${getPrice(tier.price)}
                     </span>
                     {tier.price > 0 && (
-                      <span className="ml-2 text-gray-600">
+                      <span className="ml-2 text-gray-700">
                         /{billingPeriod === 'annual' ? 'year' : tier.period}
                       </span>
                     )}
@@ -183,7 +183,7 @@ export default function Pricing() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className={feature.startsWith('Everything') ? 'font-semibold' : ''}>
+                      <span className={feature.startsWith('Everything') ? 'font-semibold text-gray-900' : 'text-gray-700'}>
                         {feature}
                       </span>
                     </div>
@@ -212,7 +212,7 @@ export default function Pricing() {
 
         {/* Additional Info */}
         <div className="mt-16 text-center">
-          <p className="text-gray-600">
+          <p className="text-gray-700">
             All plans include secure data storage and HIPAA compliance.{' '}
             <button className="text-[#0066cc] hover:underline font-medium">
               Compare all features
