@@ -68,7 +68,7 @@ export default function Dashboard() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, Alex!</h1>
-            <p className="text-gray-600">Here's your health overview</p>
+            <p className="text-gray-600">Here&apos;s your health overview</p>
           </div>
 
           {/* Membership Card */}

@@ -113,7 +113,7 @@ export default function Booking() {
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Appointment Confirmed!</h1>
             <p className="text-gray-600 mb-8">
-              Your appointment has been successfully scheduled. You'll receive a confirmation email shortly.
+              Your appointment has been successfully scheduled. You&apos;ll receive a confirmation email shortly.
             </p>
             <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left">
               <h3 className="font-bold text-gray-900 mb-4">Appointment Details</h3>
@@ -417,7 +417,7 @@ export default function Booking() {
                     </svg>
                     <div className="text-sm">
                       <p className="font-semibold text-gray-900 mb-1">As a Premium member:</p>
-                      <p className="text-gray-700">You'll receive priority confirmation and your dedicated coordinator will follow up with you shortly.</p>
+                      <p className="text-gray-700">You&apos;ll receive priority confirmation and your dedicated coordinator will follow up with you shortly.</p>
                     </div>
                   </div>
                 </div>
