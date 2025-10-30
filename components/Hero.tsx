@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Hero() {
+  const { openSignupModal } = useAuth();
   return (
     <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto">
@@ -52,18 +56,18 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/#pricing"
-                className="inline-flex items-center justify-center bg-[#0066cc] hover:bg-[#0052a3] text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg hover:shadow-xl"
+              <button
+                onClick={openSignupModal}
+                className="inline-flex items-center justify-center bg-[#0066cc] hover:bg-[#0052a3] text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg hover:shadow-xl cursor-pointer"
               >
                 Get Started Free
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </Link>
+              </button>
               <Link
                 href="/#features"
-                className="inline-flex items-center justify-center border-2 border-gray-300 hover:border-[#0066cc] text-gray-700 hover:text-[#0066cc] px-8 py-4 rounded-lg font-semibold text-lg transition"
+                className="inline-flex items-center justify-center border-2 border-gray-300 hover:border-[#0066cc] text-gray-700 hover:text-[#0066cc] px-8 py-4 rounded-lg font-semibold text-lg transition cursor-pointer"
               >
                 Learn More
               </Link>
