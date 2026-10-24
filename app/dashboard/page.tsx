@@ -5,6 +5,18 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 
+const formatDay = (iso: string) => {
+  const date = new Date(`${iso}T00:00:00`);
+  return {
+    month: date.toLocaleDateString('en-US', { month: 'short' }),
+    day: date.getDate(),
+    weekday: date.toLocaleDateString('en-US', { weekday: 'long' }),
+  };
+};
+
+const formatDate = (iso: string) =>
+  new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
 export default function Dashboard() {
   const [membershipTier] = useState('Premium');
 
@@ -54,219 +66,193 @@ export default function Dashboard() {
   ];
 
   const healthMetrics = [
-    { label: 'Blood Pressure', value: '120/80', status: 'normal', unit: 'mmHg' },
-    { label: 'Heart Rate', value: '72', status: 'normal', unit: 'bpm' },
+    { label: 'Blood pressure', value: '120/80', status: 'normal', unit: 'mmHg' },
+    { label: 'Heart rate', value: '72', status: 'normal', unit: 'bpm' },
     { label: 'Weight', value: '68', status: 'normal', unit: 'kg' },
     { label: 'BMI', value: '22.5', status: 'normal', unit: '' },
+  ];
+
+  const membershipStats = [
+    { label: 'Plan', value: `${membershipTier}` },
+    { label: 'Appointments this month', value: '3' },
+    { label: 'Teleconsults left', value: '2 of 2' },
+    { label: 'Member since', value: 'Jan 2025' },
+  ];
+
+  const quickActions = [
+    { label: 'View records', href: '#records' },
+    { label: 'Message coordinator', href: '#coordinator' },
+    { label: 'Health tips', href: '#' },
   ];
 
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-50 pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="min-h-screen pt-16">
+        <div className="container-page py-10 md:py-14">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, Alex!</h1>
-            <p className="text-gray-600">Here&apos;s your health overview</p>
-          </div>
-
-          {/* Membership Card */}
-          <div className="bg-gradient-to-br from-[#0066cc] to-[#8b5cf6] rounded-2xl p-6 mb-8 text-white shadow-lg">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <div className="text-sm opacity-90 mb-1">Membership Status</div>
-                <div className="text-2xl font-bold">{membershipTier} Member</div>
-              </div>
-              <div className="px-3 py-1 bg-white/20 rounded-full text-sm font-semibold">
-                Active
-              </div>
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <p className="eyebrow mb-3">Dashboard</p>
+              <h1 className="font-display text-4xl tracking-tight md:text-5xl">Good morning, Alex</h1>
+              <p className="mt-2 text-ink-muted">You have 2 upcoming appointments. Nothing needs your attention today.</p>
             </div>
-            <div className="grid grid-cols-3 gap-4 mt-6">
-              <div>
-                <div className="text-sm opacity-90">Appointments This Month</div>
-                <div className="text-2xl font-bold">3</div>
-              </div>
-              <div>
-                <div className="text-sm opacity-90">Teleconsults Left</div>
-                <div className="text-2xl font-bold">2/2</div>
-              </div>
-              <div>
-                <div className="text-sm opacity-90">Member Since</div>
-                <div className="text-lg font-semibold">Jan 2025</div>
-              </div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              {quickActions.map((action) => (
+                <a key={action.label} href={action.href} className="text-sm text-ink-muted transition-colors hover:text-ink">
+                  {action.label}
+                </a>
+              ))}
+              <Link href="/booking" className="btn-primary">
+                Book appointment
+              </Link>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
-            <Link
-              href="/booking"
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center"
-            >
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+          {/* Membership */}
+          <dl className="card mt-10 grid grid-cols-2 md:grid-cols-4">
+            {membershipStats.map((stat, idx) => (
+              <div
+                key={stat.label}
+                className={`px-5 py-5 md:px-6 ${idx % 2 === 1 ? 'border-l border-line' : ''} ${idx >= 2 ? 'border-t border-line md:border-t-0' : ''} ${idx === 2 ? 'md:border-l' : ''}`}
+              >
+                <dt className="text-xs text-ink-subtle">{stat.label}</dt>
+                <dd className="mt-1 flex items-center gap-2 text-lg font-medium text-ink">
+                  {stat.value}
+                  {idx === 0 && (
+                    <span className="rounded-sm bg-accent-soft px-1.5 py-0.5 text-xs font-medium text-accent">Active</span>
+                  )}
+                </dd>
               </div>
-              <span className="font-semibold text-gray-900">Book Appointment</span>
-            </Link>
-            <button className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <span className="font-semibold text-gray-900">View Records</span>
-            </button>
-            <button className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <span className="font-semibold text-gray-900">Contact Coordinator</span>
-            </button>
-            <button className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center mb-3">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <span className="font-semibold text-gray-900">Health Tips</span>
-            </button>
-          </div>
+            ))}
+          </dl>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-10">
               {/* Upcoming Appointments */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-gray-900">Upcoming Appointments</h2>
-                  <Link href="/booking" className="text-[#0066cc] hover:underline text-sm font-medium">
-                    Book New
+              <section>
+                <div className="mb-4 flex items-baseline justify-between">
+                  <h2 className="text-lg font-medium">Upcoming appointments</h2>
+                  <Link href="/booking" className="btn-quiet">
+                    Book new
                   </Link>
                 </div>
-                <div className="space-y-4">
-                  {upcomingAppointments.map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-[#0066cc] transition"
-                    >
-                      <div className="flex justify-between items-start mb-2">
+                <ul className="card divide-y divide-line">
+                  {upcomingAppointments.map((appointment) => {
+                    const day = formatDay(appointment.date);
+                    return (
+                      <li key={appointment.id} className="grid grid-cols-[3.5rem_1fr] gap-5 p-5 sm:grid-cols-[3.5rem_1fr_auto]">
+                        <div className="text-center">
+                          <div className="text-xs uppercase tracking-wider text-ink-subtle">{day.month}</div>
+                          <div className="font-display text-3xl leading-tight">{day.day}</div>
+                        </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900">{appointment.type}</h3>
-                          <p className="text-sm text-gray-600">{appointment.doctor}</p>
+                          <h3 className="font-medium text-ink">{appointment.type}</h3>
+                          <p className="mt-0.5 text-sm text-ink-muted">
+                            {appointment.doctor} · {appointment.hospital}
+                          </p>
+                          <p className="mt-1 text-sm text-ink-subtle">
+                            {day.weekday}, {appointment.time}
+                          </p>
                         </div>
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            appointment.status === 'Confirmed'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-yellow-100 text-yellow-700'
-                          }`}
-                        >
-                          {appointment.status}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">{appointment.hospital}</p>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <div className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          {appointment.date}
+                        <div className="col-start-2 sm:col-start-auto">
+                          <span
+                            className={`inline-flex items-center gap-1.5 text-xs font-medium ${
+                              appointment.status === 'Confirmed' ? 'text-accent' : 'text-caution'
+                            }`}
+                          >
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${
+                                appointment.status === 'Confirmed' ? 'bg-accent' : 'bg-caution'
+                              }`}
+                            />
+                            {appointment.status}
+                          </span>
                         </div>
-                        <div className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {appointment.time}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
 
               {/* Medical Records */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-gray-900">Recent Medical Records</h2>
-                  <button className="text-[#0066cc] hover:underline text-sm font-medium">
-                    View All
-                  </button>
+              <section id="records">
+                <div className="mb-4 flex items-baseline justify-between">
+                  <h2 className="text-lg font-medium">Recent records</h2>
+                  <button className="btn-quiet">View all</button>
                 </div>
-                <div className="space-y-3">
-                  {medicalRecords.map((record) => (
-                    <div
-                      key={record.id}
-                      className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#0066cc] transition cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900">{record.title}</div>
-                          <div className="text-sm text-gray-600">{record.doctor} • {record.date}</div>
-                        </div>
-                      </div>
-                      <span className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
-                        {record.type}
-                      </span>
-                    </div>
-                  ))}
+                <div className="card overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-line text-xs text-ink-subtle">
+                        <th className="px-5 py-3 font-normal">Document</th>
+                        <th className="hidden px-5 py-3 font-normal sm:table-cell">From</th>
+                        <th className="px-5 py-3 font-normal">Type</th>
+                        <th className="px-5 py-3 text-right font-normal">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {medicalRecords.map((record) => (
+                        <tr key={record.id} className="cursor-pointer transition-colors hover:bg-paper">
+                          <td className="px-5 py-4 font-medium text-ink">{record.title}</td>
+                          <td className="hidden px-5 py-4 text-ink-muted sm:table-cell">{record.doctor}</td>
+                          <td className="px-5 py-4 text-ink-muted">{record.type}</td>
+                          <td className="px-5 py-4 text-right whitespace-nowrap tabular-nums text-ink-muted">{formatDate(record.date)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              </div>
+              </section>
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <aside className="space-y-10">
               {/* Health Metrics */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Health Metrics</h2>
-                <div className="space-y-4">
+              <section>
+                <div className="mb-4 flex items-baseline justify-between">
+                  <h2 className="text-lg font-medium">Health metrics</h2>
+                  <span className="text-xs text-ink-subtle">Updated Sep 20</span>
+                </div>
+                <dl className="card grid grid-cols-2">
                   {healthMetrics.map((metric, idx) => (
-                    <div key={idx} className="pb-4 border-b border-gray-100 last:border-0">
-                      <div className="flex justify-between items-start mb-1">
-                        <span className="text-sm text-gray-600">{metric.label}</span>
-                        <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
-                          {metric.status}
-                        </span>
-                      </div>
-                      <div className="text-2xl font-bold text-gray-900">
-                        {metric.value}
-                        {metric.unit && <span className="text-sm text-gray-600 ml-1">{metric.unit}</span>}
-                      </div>
+                    <div
+                      key={metric.label}
+                      className={`p-5 ${idx % 2 === 1 ? 'border-l border-line' : ''} ${idx >= 2 ? 'border-t border-line' : ''}`}
+                    >
+                      <dt className="text-xs text-ink-subtle">{metric.label}</dt>
+                      <dd className="mt-1">
+                        <span className="font-display text-2xl tracking-tight">{metric.value}</span>
+                        {metric.unit && <span className="ml-1 text-xs text-ink-muted">{metric.unit}</span>}
+                      </dd>
+                      <dd className="mt-1 text-xs capitalize text-accent">{metric.status}</dd>
                     </div>
                   ))}
-                </div>
-              </div>
+                </dl>
+              </section>
 
               {/* Your Coordinator */}
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6">
-                <h3 className="font-bold text-gray-900 mb-4">Your Health Coordinator</h3>
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full"></div>
+              <section id="coordinator" className="card p-5">
+                <h2 className="text-xs text-ink-subtle">Your coordinator</h2>
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-sunken font-display text-lg text-ink">
+                    ER
+                  </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Emily Rodriguez</div>
-                    <div className="text-sm text-gray-600">Premium Coordinator</div>
+                    <div className="font-medium text-ink">Emily Rodriguez</div>
+                    <div className="text-sm text-ink-muted">Replies within 1 hour</div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-4">
-                  Available to help with appointments, reports, and health queries.
+                <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                  Ask Emily about appointments, reports, insurance, or anything that&apos;s on your mind.
                 </p>
-                <button className="w-full bg-[#0066cc] hover:bg-[#0052a3] text-white py-2 rounded-lg font-medium transition">
-                  Contact Emily
-                </button>
-              </div>
-            </div>
+                <button className="btn-secondary mt-5 w-full">Message Emily</button>
+              </section>
+            </aside>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

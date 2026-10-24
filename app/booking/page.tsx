@@ -96,56 +96,73 @@ export default function Booking() {
     setShowConfirmation(true);
   };
 
+  const steps = ['Specialty', 'Doctor', 'Date & time', 'Confirm'];
+
+  const initials = (name: string) =>
+    name
+      .replace('Dr. ', '')
+      .split(' ')
+      .map((part) => part[0])
+      .join('');
+
+  const formatDate = (iso: string) =>
+    iso
+      ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+      : '';
+
+  const summary = [
+    { label: 'Specialty', value: selectedSpecialty },
+    { label: 'Hospital', value: selectedDoctor?.hospital || selectedHospital },
+    { label: 'Doctor', value: selectedDoctor?.name },
+    { label: 'Date', value: formatDate(selectedDate) },
+    { label: 'Time', value: selectedTime },
+  ];
+
+  const StepHeader = ({ title, back }: { title: string; back?: number }) => (
+    <div className="mb-6 flex items-baseline justify-between">
+      <h2 className="font-display text-3xl tracking-tight">{title}</h2>
+      {back && (
+        <button onClick={() => setStep(back)} className="btn-quiet">
+          Back
+        </button>
+      )}
+    </div>
+  );
+
   if (showConfirmation) {
     return (
       <>
         <Navigation />
-        <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center px-4">
-          <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
+        <main className="min-h-screen pt-16">
+          <div className="container-page max-w-2xl py-16 md:py-24">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 16 16" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5l3 3 7-7" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Appointment Confirmed!</h1>
-            <p className="text-gray-600 mb-8">
-              Your appointment has been successfully scheduled. You&apos;ll receive a confirmation email shortly.
+            <h1 className="mt-6 font-display text-4xl tracking-tight md:text-5xl">You&apos;re booked.</h1>
+            <p className="mt-3 text-ink-muted">
+              A confirmation email is on its way. Your coordinator will send your records to the clinic before the visit.
             </p>
-            <div className="bg-blue-50 rounded-lg p-6 mb-8 text-left">
-              <h3 className="font-bold text-gray-900 mb-4">Appointment Details</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Doctor:</span>
-                  <span className="font-semibold">{selectedDoctor?.name}</span>
+
+            <dl className="card mt-10 divide-y divide-line text-sm">
+              {[
+                { label: 'Doctor', value: selectedDoctor?.name },
+                { label: 'Specialty', value: selectedDoctor?.specialty },
+                { label: 'Hospital', value: selectedDoctor?.hospital },
+                { label: 'Date', value: formatDate(selectedDate) },
+                { label: 'Time', value: selectedTime },
+              ].map((row) => (
+                <div key={row.label} className="flex justify-between gap-4 px-5 py-3.5">
+                  <dt className="text-ink-muted">{row.label}</dt>
+                  <dd className="text-right font-medium text-ink">{row.value}</dd>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Specialty:</span>
-                  <span className="font-semibold">{selectedDoctor?.specialty}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Hospital:</span>
-                  <span className="font-semibold">{selectedDoctor?.hospital}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Date:</span>
-                  <span className="font-semibold">{selectedDate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Time:</span>
-                  <span className="font-semibold">{selectedTime}</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Link
-                href="/dashboard"
-                className="flex-1 bg-[#0066cc] hover:bg-[#0052a3] text-white py-3 rounded-lg font-semibold transition"
-              >
-                Go to Dashboard
+              ))}
+            </dl>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/dashboard" className="btn-primary px-5">
+                Go to dashboard
               </Link>
               <button
                 onClick={() => {
@@ -153,13 +170,13 @@ export default function Booking() {
                   setStep(1);
                   setSelectedDoctor(null);
                 }}
-                className="flex-1 border-2 border-gray-300 hover:border-[#0066cc] text-gray-700 py-3 rounded-lg font-semibold transition"
+                className="btn-secondary px-5"
               >
-                Book Another
+                Book another
               </button>
             </div>
           </div>
-        </div>
+        </main>
         <Footer />
       </>
     );
@@ -168,271 +185,219 @@ export default function Booking() {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-50 pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="min-h-screen pt-16">
+        <div className="container-page py-10 md:py-14">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Book an Appointment</h1>
-            <p className="text-gray-600">Find and schedule with the best healthcare providers</p>
+          <div className="max-w-2xl">
+            <p className="eyebrow mb-3">Book an appointment</p>
+            <h1 className="font-display text-4xl tracking-tight md:text-5xl">Find the right doctor</h1>
           </div>
 
-          {/* Progress Steps */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between max-w-3xl mx-auto">
-              {[
-                { num: 1, label: 'Select Specialty' },
-                { num: 2, label: 'Choose Doctor' },
-                { num: 3, label: 'Pick Date & Time' },
-                { num: 4, label: 'Confirm' },
-              ].map((s, idx) => (
-                <div key={s.num} className="flex items-center flex-1">
-                  <div className="flex flex-col items-center flex-1">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-                        step >= s.num
-                          ? 'bg-[#0066cc] text-white'
-                          : 'bg-gray-200 text-gray-600'
-                      }`}
-                    >
-                      {s.num}
-                    </div>
-                    <span className="text-xs mt-2 text-gray-600">{s.label}</span>
+          {/* Progress */}
+          <ol className="mt-10 grid grid-cols-4 gap-2" aria-label="Booking progress">
+            {steps.map((label, idx) => {
+              const num = idx + 1;
+              return (
+                <li key={label} aria-current={step === num ? 'step' : undefined}>
+                  <div className={`h-0.5 ${step >= num ? 'bg-accent' : 'bg-line-strong'}`} />
+                  <div className={`mt-2 text-xs ${step === num ? 'font-medium text-ink' : 'text-ink-subtle'}`}>
+                    <span className="tabular-nums">{num}.</span> <span className="hidden sm:inline">{label}</span>
                   </div>
-                  {idx < 3 && (
-                    <div
-                      className={`h-1 flex-1 ${
-                        step > s.num ? 'bg-[#0066cc]' : 'bg-gray-200'
-                      }`}
-                    />
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_18rem]">
+            <div>
+              {/* Step 1: Select Specialty */}
+              {step === 1 && (
+                <div>
+                  <StepHeader title="What kind of care?" />
+                  <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+                    {specialties.map((specialty) => (
+                      <button
+                        key={specialty}
+                        onClick={() => setSelectedSpecialty(specialty)}
+                        aria-pressed={selectedSpecialty === specialty}
+                        className="option px-4 py-3 text-sm font-medium"
+                      >
+                        {specialty}
+                      </button>
+                    ))}
+                  </div>
+
+                  <h3 className="mt-10 mb-1 font-medium">Preferred hospital</h3>
+                  <p className="mb-4 text-sm text-ink-muted">Optional. Leave blank and we&apos;ll show every partner.</p>
+                  <div className="grid gap-2 md:grid-cols-2">
+                    {hospitals.map((hospital) => (
+                      <button
+                        key={hospital.id}
+                        onClick={() => setSelectedHospital(selectedHospital === hospital.name ? '' : hospital.name)}
+                        aria-pressed={selectedHospital === hospital.name}
+                        className="option flex items-center justify-between px-4 py-3.5"
+                      >
+                        <span>
+                          <span className="block text-sm font-medium text-ink">{hospital.name}</span>
+                          <span className="block text-sm text-ink-muted">{hospital.location}</span>
+                        </span>
+                        <span className="text-sm tabular-nums text-ink-muted">★ {hospital.rating}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button onClick={() => setStep(2)} disabled={!selectedSpecialty} className="btn-primary mt-10 px-6">
+                    Continue
+                  </button>
+                </div>
+              )}
+
+              {/* Step 2: Choose Doctor */}
+              {step === 2 && (
+                <div>
+                  <StepHeader title="Choose a doctor" back={1} />
+                  {filteredDoctors.length === 0 ? (
+                    <div className="card px-6 py-10 text-center">
+                      <p className="font-medium">No doctors match that combination yet.</p>
+                      <p className="mt-1 text-sm text-ink-muted">
+                        Try another hospital, or ask your coordinator to find one for you.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {filteredDoctors.map((doctor) => (
+                        <button
+                          key={doctor.id}
+                          onClick={() => setSelectedDoctor(doctor)}
+                          aria-pressed={selectedDoctor?.id === doctor.id}
+                          className="option flex w-full items-start gap-4 p-5"
+                        >
+                          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sunken font-display text-lg text-ink">
+                            {initials(doctor.name)}
+                          </span>
+                          <span className="flex-1">
+                            <span className="block font-medium text-ink">{doctor.name}</span>
+                            <span className="block text-sm text-ink-muted">
+                              {doctor.specialty} · {doctor.hospital}
+                            </span>
+                            <span className="mt-1 block text-sm text-ink-subtle">
+                              ★ {doctor.rating} · {doctor.experience} experience
+                            </span>
+                          </span>
+                          <span className="hidden text-right sm:block">
+                            <span className="block text-xs text-ink-subtle">Next available</span>
+                            <span className="block text-sm font-medium text-ink">{formatDate(doctor.nextAvailable)}</span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   )}
-                </div>
-              ))}
-            </div>
-          </div>
 
-          <div className="max-w-5xl mx-auto">
-            {/* Step 1: Select Specialty */}
-            {step === 1 && (
-              <div className="bg-white rounded-xl shadow-sm p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Select Specialty</h2>
-                <div className="grid md:grid-cols-4 gap-4 mb-6">
-                  {specialties.map((specialty) => (
-                    <button
-                      key={specialty}
-                      onClick={() => setSelectedSpecialty(specialty)}
-                      className={`p-4 rounded-lg border-2 transition ${
-                        selectedSpecialty === specialty
-                          ? 'border-[#0066cc] bg-blue-50 text-[#0066cc]'
-                          : 'border-gray-200 hover:border-[#0066cc] text-gray-700'
-                      }`}
-                    >
-                      <div className="font-semibold">{specialty}</div>
-                    </button>
-                  ))}
-                </div>
-
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 mt-8">Select Hospital (Optional)</h2>
-                <div className="grid md:grid-cols-2 gap-4 mb-8">
-                  {hospitals.map((hospital) => (
-                    <button
-                      key={hospital.id}
-                      onClick={() => setSelectedHospital(hospital.name)}
-                      className={`p-4 rounded-lg border-2 transition text-left ${
-                        selectedHospital === hospital.name
-                          ? 'border-[#0066cc] bg-blue-50'
-                          : 'border-gray-200 hover:border-[#0066cc]'
-                      }`}
-                    >
-                      <div className="font-semibold text-gray-900">{hospital.name}</div>
-                      <div className="text-sm text-gray-600">{hospital.location}</div>
-                      <div className="flex items-center mt-2">
-                        <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        <span className="text-sm font-semibold">{hospital.rating}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setStep(2)}
-                  disabled={!selectedSpecialty}
-                  className="w-full bg-[#0066cc] hover:bg-[#0052a3] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition"
-                >
-                  Continue to Select Doctor
-                </button>
-              </div>
-            )}
-
-            {/* Step 2: Choose Doctor */}
-            {step === 2 && (
-              <div className="bg-white rounded-xl shadow-sm p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Choose Doctor</h2>
-                  <button onClick={() => setStep(1)} className="text-[#0066cc] hover:underline">
-                    Back
+                  <button onClick={() => setStep(3)} disabled={!selectedDoctor} className="btn-primary mt-10 px-6">
+                    Continue
                   </button>
                 </div>
-                <div className="space-y-4 mb-8">
-                  {filteredDoctors.map((doctor) => (
-                    <button
-                      key={doctor.id}
-                      onClick={() => setSelectedDoctor(doctor)}
-                      className={`w-full p-6 rounded-lg border-2 transition text-left ${
-                        selectedDoctor?.id === doctor.id
-                          ? 'border-[#0066cc] bg-blue-50'
-                          : 'border-gray-200 hover:border-[#0066cc]'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex space-x-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full"></div>
-                          <div>
-                            <h3 className="font-bold text-gray-900 text-lg">{doctor.name}</h3>
-                            <p className="text-gray-600">{doctor.specialty}</p>
-                            <p className="text-sm text-gray-500">{doctor.hospital}</p>
-                            <div className="flex items-center space-x-4 mt-2">
-                              <div className="flex items-center">
-                                <svg className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <span className="text-sm font-semibold">{doctor.rating}</span>
-                              </div>
-                              <span className="text-sm text-gray-500">{doctor.experience} experience</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-600 mb-1">Next Available</div>
-                          <div className="font-semibold text-gray-900">{doctor.nextAvailable}</div>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+              )}
 
-                <button
-                  onClick={() => setStep(3)}
-                  disabled={!selectedDoctor}
-                  className="w-full bg-[#0066cc] hover:bg-[#0052a3] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition"
-                >
-                  Continue to Select Time
-                </button>
-              </div>
-            )}
+              {/* Step 3: Pick Date & Time */}
+              {step === 3 && (
+                <div>
+                  <StepHeader title="Pick a time" back={2} />
 
-            {/* Step 3: Pick Date & Time */}
-            {step === 3 && (
-              <div className="bg-white rounded-xl shadow-sm p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Select Date & Time</h2>
-                  <button onClick={() => setStep(2)} className="text-[#0066cc] hover:underline">
-                    Back
-                  </button>
-                </div>
-
-                <div className="mb-8">
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">Select Date</label>
+                  <label htmlFor="date" className="label">
+                    Date
+                  </label>
                   <input
+                    id="date"
                     type="date"
                     min={new Date().toISOString().split('T')[0]}
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#0066cc] focus:outline-none"
+                    className="field max-w-xs"
                   />
-                </div>
 
-                <div className="mb-8">
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">Select Time</label>
-                  <div className="grid grid-cols-4 gap-3">
-                    {timeSlots.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`py-3 rounded-lg border-2 transition font-medium ${
-                          selectedTime === time
-                            ? 'border-[#0066cc] bg-blue-50 text-[#0066cc]'
-                            : 'border-gray-200 hover:border-[#0066cc] text-gray-700'
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
+                  <div className="mt-8">
+                    <div className="label">Time</div>
+                    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+                      {timeSlots.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          aria-pressed={selectedTime === time}
+                          className="option py-2.5 text-center text-sm tabular-nums"
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  onClick={() => setStep(4)}
-                  disabled={!selectedDate || !selectedTime}
-                  className="w-full bg-[#0066cc] hover:bg-[#0052a3] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition"
-                >
-                  Continue to Confirm
-                </button>
-              </div>
-            )}
-
-            {/* Step 4: Confirm */}
-            {step === 4 && (
-              <div className="bg-white rounded-xl shadow-sm p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Confirm Appointment</h2>
-                  <button onClick={() => setStep(3)} className="text-[#0066cc] hover:underline">
-                    Back
+                  <button onClick={() => setStep(4)} disabled={!selectedDate || !selectedTime} className="btn-primary mt-10 px-6">
+                    Continue
                   </button>
                 </div>
+              )}
 
-                <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                  <h3 className="font-bold text-gray-900 mb-4">Appointment Summary</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full"></div>
+              {/* Step 4: Confirm */}
+              {step === 4 && (
+                <div>
+                  <StepHeader title="Review and confirm" back={3} />
+
+                  <div className="card">
+                    <div className="flex items-center gap-4 border-b border-line p-5">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sunken font-display text-lg">
+                        {selectedDoctor && initials(selectedDoctor.name)}
+                      </span>
                       <div>
-                        <div className="font-semibold text-gray-900 text-lg">{selectedDoctor?.name}</div>
-                        <div className="text-gray-600">{selectedDoctor?.specialty}</div>
-                        <div className="text-sm text-gray-500">{selectedDoctor?.hospital}</div>
+                        <div className="font-medium">{selectedDoctor?.name}</div>
+                        <div className="text-sm text-ink-muted">
+                          {selectedDoctor?.specialty} · {selectedDoctor?.hospital}
+                        </div>
                       </div>
                     </div>
-                    <div className="border-t pt-4 space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Date:</span>
-                        <span className="font-semibold">{selectedDate}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Time:</span>
-                        <span className="font-semibold">{selectedTime}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Consultation Fee:</span>
-                        <span className="font-semibold">$100</span>
-                      </div>
-                    </div>
+                    <dl className="divide-y divide-line text-sm">
+                      {[
+                        { label: 'Date', value: formatDate(selectedDate) },
+                        { label: 'Time', value: selectedTime },
+                        { label: 'Consultation fee', value: '$100' },
+                      ].map((row) => (
+                        <div key={row.label} className="flex justify-between px-5 py-3.5">
+                          <dt className="text-ink-muted">{row.label}</dt>
+                          <dd className="font-medium">{row.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                </div>
 
-                <div className="bg-blue-50 border-l-4 border-[#0066cc] p-4 mb-6">
-                  <div className="flex">
-                    <svg className="w-5 h-5 text-[#0066cc] mr-3" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                    <div className="text-sm">
-                      <p className="font-semibold text-gray-900 mb-1">As a Premium member:</p>
-                      <p className="text-gray-700">You&apos;ll receive priority confirmation and your dedicated coordinator will follow up with you shortly.</p>
+                  <p className="mt-5 border-l-2 border-accent pl-4 text-sm leading-relaxed text-ink-muted">
+                    <span className="font-medium text-ink">Premium member: </span>
+                    you&apos;ll get priority confirmation, and your coordinator will follow up before the visit.
+                  </p>
+
+                  <button onClick={handleBooking} className="btn-primary mt-10 px-6 py-3">
+                    Confirm booking
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Summary */}
+            <aside className="lg:sticky lg:top-24 lg:self-start">
+              <div className="card">
+                <h2 className="border-b border-line px-5 py-3.5 text-sm font-medium">Your appointment</h2>
+                <dl className="divide-y divide-line text-sm">
+                  {summary.map((row) => (
+                    <div key={row.label} className="flex justify-between gap-4 px-5 py-3">
+                      <dt className="text-ink-subtle">{row.label}</dt>
+                      <dd className={`text-right ${row.value ? 'text-ink' : 'text-ink-subtle'}`}>{row.value || '—'}</dd>
                     </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleBooking}
-                  className="w-full bg-[#0066cc] hover:bg-[#0052a3] text-white py-4 rounded-lg font-semibold text-lg transition shadow-lg hover:shadow-xl"
-                >
-                  Confirm Booking
-                </button>
+                  ))}
+                </dl>
               </div>
-            )}
+            </aside>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

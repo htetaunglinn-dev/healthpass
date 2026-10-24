@@ -1,18 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 const tiers = [
   {
     name: 'Free',
     price: 0,
     period: 'forever',
-    description: 'Essential healthcare management for everyone',
+    description: 'Essential healthcare management for everyone.',
     features: [
       'Digital health records storage',
       'Self-service appointment booking',
       'Email appointment reminders',
-      'Basic health tips newsletter',
+      'Health tips newsletter',
       'Medical history access',
     ],
     notIncluded: [
@@ -21,56 +22,57 @@ const tiers = [
       'Teleconsultations',
       'Health screening',
     ],
-    cta: 'Start Free',
+    cta: 'Start free',
     popular: false,
   },
   {
     name: 'Premium',
     price: 40,
     period: 'month',
-    description: 'Perfect for individuals and families',
+    description: 'For individuals and families who want a coordinator.',
     features: [
       'Everything in Free, plus:',
       'Priority appointment scheduling',
       'Dedicated coordinator (shared)',
-      '2 free teleconsultations/month',
+      '2 teleconsultations a month',
       'Annual basic health screening',
-      'Prescription & report delivery',
+      'Prescription and report delivery',
       'Insurance claim assistance',
-      'Package deals on bundled services',
+      'Package pricing on bundled services',
       '24/7 email support',
     ],
     notIncluded: [],
-    cta: 'Start Premium',
+    cta: 'Choose Premium',
     popular: true,
-    savings: 'Save $96/year with annual billing',
+    savings: 'Save $96 a year with annual billing',
   },
   {
     name: 'VIP',
     price: 150,
     period: 'month',
-    description: 'Comprehensive care for you and your family',
+    description: 'Comprehensive care for you and your family.',
     features: [
       'Everything in Premium, plus:',
-      'Personal health coordinator (1:20)',
+      'Personal coordinator (1 to 20 members)',
       'Unlimited teleconsultations',
       'Comprehensive annual health check',
-      'Family coverage (spouse + 2 children)',
+      'Family coverage (spouse and 2 children)',
       'Home visit coordination',
       '24/7 emergency hotline',
       'Medical tourism assistance',
       'Second opinion coordination',
-      'Concierge services (prescription, reports, transport)',
+      'Concierge: prescriptions, reports, transport',
     ],
     notIncluded: [],
-    cta: 'Start VIP',
+    cta: 'Choose VIP',
     popular: false,
-    savings: 'Save $360/year with annual billing',
+    savings: 'Save $360 a year with annual billing',
   },
 ];
 
 export default function Pricing() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const { openSignupModal } = useAuth();
 
   const getPrice = (basePrice: number) => {
     if (basePrice === 0) return 0;
@@ -78,147 +80,102 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <section id="pricing" className="border-t border-line py-20 md:py-28">
+      <div className="container-page">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Choose Your <span className="text-[#0066cc]">Healthcare Plan</span>
-          </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-            No discounts, just pure value. Get convenience, trust, and personalized care
-            that saves you time and gives you peace of mind.
-          </p>
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+          <div className="max-w-xl">
+            <p className="eyebrow mb-4">Pricing</p>
+            <h2 className="font-display text-4xl leading-tight tracking-tight md:text-5xl">
+              Simple plans. Cancel any time.
+            </h2>
+          </div>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm">
-            <button
-              onClick={() => setBillingPeriod('monthly')}
-              className={`px-6 py-2 rounded-md font-medium transition ${
-                billingPeriod === 'monthly'
-                  ? 'bg-[#0066cc] text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBillingPeriod('annual')}
-              className={`px-6 py-2 rounded-md font-medium transition ${
-                billingPeriod === 'annual'
-                  ? 'bg-[#0066cc] text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Annual
-              <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                Save 20%
-              </span>
-            </button>
+          <div className="inline-flex self-start rounded-md border border-line-strong bg-surface p-1 md:self-auto" role="group" aria-label="Billing period">
+            {(['monthly', 'annual'] as const).map((period) => (
+              <button
+                key={period}
+                onClick={() => setBillingPeriod(period)}
+                aria-pressed={billingPeriod === period}
+                className={`cursor-pointer rounded-sm px-4 py-1.5 text-sm transition-colors ${
+                  billingPeriod === period ? 'bg-ink text-white' : 'text-ink-muted hover:text-ink'
+                }`}
+              >
+                {period === 'monthly' ? 'Monthly' : 'Annual, save 20%'}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {tiers.map((tier) => (
+        {/* Plans */}
+        <div className="mt-12 grid overflow-hidden rounded-lg border border-line bg-surface md:grid-cols-3">
+          {tiers.map((tier, idx) => (
             <div
               key={tier.name}
-              className={`relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition ${
-                tier.popular ? 'ring-2 ring-[#0066cc] scale-105' : ''
+              className={`relative flex flex-col p-7 lg:p-8 ${idx > 0 ? 'border-t border-line md:border-t-0 md:border-l' : ''} ${
+                tier.popular ? 'bg-accent-soft/40' : ''
               }`}
             >
-              {tier.popular && (
-                <div className="absolute -top-4 left-0 right-0 flex justify-center">
-                  <span className="bg-gradient-to-r from-[#0066cc] to-[#0052a3] text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Most Popular
-                  </span>
-                </div>
-              )}
+              {tier.popular && <div className="absolute inset-x-0 top-0 h-0.5 bg-accent" aria-hidden="true" />}
 
-              <div className="p-8">
-                {/* Tier Name */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
-                <p className="text-gray-700 text-sm mb-6">{tier.description}</p>
-
-                {/* Price */}
-                <div className="mb-6">
-                  <div className="flex items-baseline">
-                    <span className="text-5xl font-bold text-gray-900">
-                      ${getPrice(tier.price)}
-                    </span>
-                    {tier.price > 0 && (
-                      <span className="ml-2 text-gray-700">
-                        /{billingPeriod === 'annual' ? 'year' : tier.period}
-                      </span>
-                    )}
-                  </div>
-                  {billingPeriod === 'annual' && tier.savings && (
-                    <p className="text-sm text-green-600 mt-1">{tier.savings}</p>
-                  )}
-                </div>
-
-                {/* CTA Button */}
-                <button
-                  className={`w-full py-3 px-6 rounded-lg font-semibold transition ${
-                    tier.popular
-                      ? 'bg-[#0066cc] hover:bg-[#0052a3] text-white shadow-md'
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
-                  }`}
-                >
-                  {tier.cta}
-                </button>
-
-                {/* Features */}
-                <div className="mt-8 space-y-4">
-                  {tier.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start space-x-3">
-                      <svg
-                        className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className={feature.startsWith('Everything') ? 'font-semibold text-gray-900' : 'text-gray-700'}>
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                  {tier.notIncluded.map((feature, idx) => (
-                    <div key={idx} className="flex items-start space-x-3 opacity-40">
-                      <svg
-                        className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-400">{feature}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium text-ink">{tier.name}</h3>
+                {tier.popular && <span className="text-xs font-medium text-accent">Most chosen</span>}
               </div>
+              <p className="mt-1 min-h-10 text-sm text-ink-muted">{tier.description}</p>
+
+              {/* Price */}
+              <div className="mt-6 flex items-baseline gap-1.5">
+                <span className="font-display text-5xl tracking-tight text-ink">${getPrice(tier.price)}</span>
+                <span className="text-sm text-ink-muted">
+                  {tier.price === 0 ? 'forever' : `/ ${billingPeriod === 'annual' ? 'year' : tier.period}`}
+                </span>
+              </div>
+              <p className="mt-1 h-5 text-xs text-accent">
+                {billingPeriod === 'annual' && tier.savings ? tier.savings : ''}
+              </p>
+
+              <button
+                onClick={openSignupModal}
+                className={`mt-6 w-full ${tier.popular ? 'btn-primary' : 'btn-secondary'}`}
+              >
+                {tier.cta}
+              </button>
+
+              {/* Features */}
+              <ul className="mt-8 space-y-3 border-t border-line pt-6 text-sm">
+                {tier.features.map((feature) =>
+                  feature.startsWith('Everything') ? (
+                    <li key={feature} className="font-medium text-ink">
+                      {feature}
+                    </li>
+                  ) : (
+                    <li key={feature} className="flex gap-3 text-ink-muted">
+                      <svg className="mt-0.5 h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 16 16" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5l3 3 7-7" />
+                      </svg>
+                      {feature}
+                    </li>
+                  )
+                )}
+                {tier.notIncluded.map((feature) => (
+                  <li key={feature} className="flex gap-3 text-ink-subtle line-through decoration-line-strong">
+                    <span className="w-4 shrink-0 text-center no-underline" aria-hidden="true">–</span>
+                    <span>
+                      <span className="sr-only">Not included: </span>
+                      {feature}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-700">
-            All plans include secure data storage and HIPAA compliance.{' '}
-            <button className="text-[#0066cc] hover:underline font-medium">
-              Compare all features
-            </button>
-          </p>
-        </div>
+        <p className="mt-8 text-sm text-ink-muted">
+          All plans include encrypted record storage and HIPAA-compliant handling of your data.
+        </p>
       </div>
     </section>
   );
