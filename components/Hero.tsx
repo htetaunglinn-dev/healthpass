@@ -3,142 +3,116 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 
+const timeline = [
+  {
+    time: 'Mon 9:12',
+    who: 'You',
+    text: 'Need a cardiologist this week. Chest tightness after running.',
+  },
+  {
+    time: 'Mon 10:05',
+    who: 'Emily, your coordinator',
+    text: 'Dr. Chen at Heart Care Center has Thursday 2:30. I sent over your last ECG and blood work.',
+  },
+  {
+    time: 'Mon 10:07',
+    who: 'You',
+    text: 'Perfect, book it.',
+  },
+];
+
+const stats = [
+  { value: '< 2 days', label: 'Average wait for an appointment' },
+  { value: '50+', label: 'Partner hospitals and clinics' },
+  { value: '24/7', label: 'Coordinator and urgent helpline' },
+];
+
 export default function Hero() {
   const { openSignupModal } = useAuth();
+
   return (
-    <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section className="pt-16">
+      <div className="relative overflow-hidden bg-sage">
+        <div className="bg-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div className="container-page relative grid gap-14 pt-16 pb-16 md:pt-24 lg:grid-cols-[1.1fr_1fr] lg:gap-20 lg:pb-24">
           {/* Left Content */}
-          <div>
-            <div className="inline-block mb-4 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              Your Personal Healthcare Concierge
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Navigate Healthcare with
-              <span className="text-[#0066cc]"> Confidence</span>
+          <div className="flex flex-col justify-center">
+            <p className="eyebrow mb-6">Healthcare concierge</p>
+            <h1 className="font-display text-5xl leading-[1.05] tracking-tight text-ink sm:text-6xl lg:text-[4.25rem]">
+              One person who handles your <em className="text-accent">healthcare</em>, start to finish.
             </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Why waste time navigating the complex healthcare system alone? Get priority scheduling,
-              dedicated coordinators, and complete transparency throughout your health journey.
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted">
+              HealthPass gives you a dedicated coordinator who books appointments, moves your records
+              between hospitals, and sorts out the insurance paperwork. You tell us what you need, we
+              take it from there.
             </p>
 
-            {/* Value Props */}
-            <div className="grid sm:grid-cols-3 gap-4 mb-10">
-              <div className="flex items-start space-x-2">
-                <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <div className="font-semibold text-gray-900">Save Time</div>
-                  <div className="text-sm text-gray-600">One point of contact</div>
-                </div>
-              </div>
-              <div className="flex items-start space-x-2">
-                <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <div className="font-semibold text-gray-900">Priority Access</div>
-                  <div className="text-sm text-gray-600">Skip waiting lists</div>
-                </div>
-              </div>
-              <div className="flex items-start space-x-2">
-                <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <div>
-                  <div className="font-semibold text-gray-900">Full Support</div>
-                  <div className="text-sm text-gray-600">24/7 assistance</div>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={openSignupModal}
-                className="inline-flex items-center justify-center bg-[#0066cc] hover:bg-[#0052a3] text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg hover:shadow-xl cursor-pointer"
-              >
-                Get Started Free
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <button onClick={openSignupModal} className="btn-primary px-5 py-3 text-[0.95rem]">
+                Create a free account
               </button>
-              <Link
-                href="/#features"
-                className="inline-flex items-center justify-center border-2 border-gray-300 hover:border-[#0066cc] text-gray-700 hover:text-[#0066cc] px-8 py-4 rounded-lg font-semibold text-lg transition cursor-pointer"
-              >
-                Learn More
+              <Link href="/#how-it-works" className="btn-secondary px-5 py-3 text-[0.95rem]">
+                See how it works
               </Link>
             </div>
-
-            {/* Trust Indicators */}
-            <div className="mt-12 flex items-center space-x-6">
-              <div>
-                <div className="text-3xl font-bold text-gray-900">10,000+</div>
-                <div className="text-sm text-gray-600">Happy Members</div>
-              </div>
-              <div className="h-12 w-px bg-gray-300"></div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">50+</div>
-                <div className="text-sm text-gray-600">Partner Hospitals</div>
-              </div>
-              <div className="h-12 w-px bg-gray-300"></div>
-              <div>
-                <div className="text-3xl font-bold text-gray-900">24/7</div>
-                <div className="text-sm text-gray-600">Support Available</div>
-              </div>
-            </div>
+            <p className="mt-4 text-sm text-ink-subtle">Free plan available. No card required.</p>
           </div>
 
-          {/* Right Image/Illustration */}
-          <div className="relative">
-            <div className="relative bg-gradient-to-br from-[#0066cc] to-[#8b5cf6] rounded-2xl p-8 shadow-2xl">
-              {/* Mock Dashboard Preview */}
-              <div className="bg-white rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                    <div>
-                      <div className="h-3 w-24 bg-gray-300 rounded"></div>
-                      <div className="h-2 w-16 bg-gray-200 rounded mt-2"></div>
-                    </div>
+          {/* Product preview: a real coordination thread rather than an illustration */}
+          <div className="flex items-center">
+            <div className="relative w-full">
+              <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-lg bg-accent-deep sm:translate-x-5 sm:translate-y-5" aria-hidden="true" />
+              <div className="card relative w-full shadow-[0_1px_2px_rgba(23,25,28,0.06)]">
+                <div className="flex items-center justify-between border-b border-line px-5 py-4">
+                  <div>
+                    <div className="text-sm font-medium text-ink">Cardiology consult</div>
+                    <div className="text-xs text-ink-subtle">Request #2048</div>
                   </div>
-                  <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
-                    Premium
-                  </div>
+                  <span className="rounded-sm bg-accent-soft px-2 py-1 text-xs font-medium text-accent">Booked</span>
                 </div>
-                <div className="space-y-3 pt-4">
-                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                    <div className="w-10 h-10 bg-blue-200 rounded"></div>
-                    <div className="flex-1">
-                      <div className="h-3 w-32 bg-blue-300 rounded mb-2"></div>
-                      <div className="h-2 w-24 bg-blue-200 rounded"></div>
-                    </div>
+
+                <ol className="space-y-5 px-5 py-5">
+                  {timeline.map((entry) => (
+                    <li key={entry.time} className="grid grid-cols-[4.5rem_1fr] gap-4">
+                      <span className="pt-0.5 text-xs tabular-nums text-ink-subtle">{entry.time}</span>
+                      <div>
+                        <div className="text-xs font-medium text-ink-muted">{entry.who}</div>
+                        <p className="mt-1 text-sm leading-relaxed text-ink">{entry.text}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="grid grid-cols-3 border-t border-line bg-paper/60 text-sm">
+                  <div className="px-4 py-4 sm:px-5">
+                    <div className="text-xs text-ink-subtle">When</div>
+                    <div className="mt-0.5 font-medium">Thu, 2:30 PM</div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-                    <div className="w-10 h-10 bg-purple-200 rounded"></div>
-                    <div className="flex-1">
-                      <div className="h-3 w-28 bg-purple-300 rounded mb-2"></div>
-                      <div className="h-2 w-20 bg-purple-200 rounded"></div>
-                    </div>
+                  <div className="border-l border-line px-4 py-4 sm:px-5">
+                    <div className="text-xs text-ink-subtle">Doctor</div>
+                    <div className="mt-0.5 font-medium">Dr. M. Chen</div>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                    <div className="w-10 h-10 bg-green-200 rounded"></div>
-                    <div className="flex-1">
-                      <div className="h-3 w-36 bg-green-300 rounded mb-2"></div>
-                      <div className="h-2 w-28 bg-green-200 rounded"></div>
-                    </div>
+                  <div className="border-l border-line px-4 py-4 sm:px-5">
+                    <div className="text-xs text-ink-subtle">Records</div>
+                    <div className="mt-0.5 font-medium">Sent</div>
                   </div>
                 </div>
               </div>
             </div>
-            {/* Floating elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-yellow-400 rounded-full opacity-20 blur-2xl"></div>
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-400 rounded-full opacity-20 blur-2xl"></div>
           </div>
         </div>
+      </div>
+
+      {/* Stats */}
+      <div className="border-y border-line bg-surface">
+        <dl className="container-page grid divide-y divide-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {stats.map((stat) => (
+            <div key={stat.label} className="py-6 sm:px-8 sm:first:pl-0">
+              <dt className="text-sm text-ink-muted">{stat.label}</dt>
+              <dd className="mt-1 font-display text-3xl tracking-tight text-ink">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

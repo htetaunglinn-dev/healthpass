@@ -1,168 +1,90 @@
+const benefits = [
+  {
+    category: 'Convenience',
+    items: [
+      { title: 'Save time', description: 'No researching hospitals or making endless calls.' },
+      { title: 'One point of contact', description: 'One coordinator handles every request.' },
+      { title: 'Faster access', description: 'Priority appointments mean less waiting.' },
+      { title: 'Simplified billing', description: 'One invoice, clear pricing, payment plans.' },
+    ],
+  },
+  {
+    category: 'Trust',
+    items: [
+      { title: 'Vetted providers', description: 'We only recommend hospitals we have verified.' },
+      { title: 'Your medical history', description: 'Kept in one secure place, shared only with consent.' },
+      { title: 'An advocate', description: 'We represent your interests with hospitals and insurers.' },
+      { title: 'Transparent pricing', description: 'Costs upfront, no surprise bills.' },
+    ],
+  },
+  {
+    category: 'Service',
+    items: [
+      { title: 'Personal care', description: 'Someone who already knows your medical journey.' },
+      { title: 'Admin support', description: 'Insurance claims, reports, and follow-ups.' },
+      { title: 'Prevention', description: 'Screening reminders and practical wellness guidance.' },
+      { title: 'Urgent help', description: 'A 24/7 line for urgent medical questions.' },
+    ],
+  },
+];
+
+const services = [
+  { title: 'Medical tourism', description: 'Coordination for treatment abroad', price: '$500 – 1,000' },
+  { title: 'Complex case management', description: 'For serious or long-term conditions', price: '$200 – 500' },
+  { title: 'Insurance navigation', description: 'Claims, pre-approvals, and appeals', price: '$100 – 200' },
+  { title: 'Wellness programs', description: 'Diabetes and weight management coaching', price: '$50 – 75 / mo' },
+];
+
 export default function Benefits() {
-  const benefits = [
-    {
-      category: 'Convenience',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      color: 'blue',
-      items: [
-        { title: 'Save Time', description: 'No need to research hospitals or make endless calls' },
-        { title: 'One Point of Contact', description: 'We handle everything for you' },
-        { title: 'Faster Access', description: 'Priority appointments mean less waiting' },
-        { title: 'Simplified Billing', description: 'One invoice, clear pricing, payment plans' },
-      ],
-    },
-    {
-      category: 'Trust',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      ),
-      color: 'green',
-      items: [
-        { title: 'Quality Assurance', description: 'We only recommend verified, quality hospitals' },
-        { title: 'Medical History Management', description: 'Everything in one secure place' },
-        { title: 'Your Advocate', description: 'We represent your interests with hospitals' },
-        { title: 'Transparency', description: 'Clear pricing upfront, no surprise bills' },
-      ],
-    },
-    {
-      category: 'Service',
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-      color: 'purple',
-      items: [
-        { title: 'Personalized Care', description: 'Someone who knows your medical journey' },
-        { title: 'Administrative Support', description: 'Insurance claims, reports, follow-ups' },
-        { title: 'Health Education', description: 'Preventive care guidance and wellness tips' },
-        { title: 'Emergency Support', description: '24/7 helpline for urgent medical questions' },
-      ],
-    },
-  ];
-
-  const colorClasses = {
-    blue: {
-      bg: 'bg-blue-100',
-      text: 'text-blue-600',
-      border: 'border-blue-200',
-      ring: 'ring-blue-500',
-    },
-    green: {
-      bg: 'bg-green-100',
-      text: 'text-green-600',
-      border: 'border-green-200',
-      ring: 'ring-green-500',
-    },
-    purple: {
-      bg: 'bg-purple-100',
-      text: 'text-purple-600',
-      border: 'border-purple-200',
-      ring: 'ring-purple-500',
-    },
-  };
-
   return (
-    <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Why Choose <span className="text-[#0066cc]">HealthPass</span>?
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We provide value through convenience, trust, and exceptional service—not discounts.
-            Your health deserves the best care coordination.
-          </p>
-        </div>
+    <section id="features" className="border-t border-line bg-surface py-20 md:py-28">
+      <div className="container-page">
+        <div className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:gap-20">
+          {/* Header */}
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="eyebrow mb-4">Why HealthPass</p>
+            <h2 className="font-display text-4xl leading-tight tracking-tight md:text-5xl">
+              Value you feel, not discounts.
+            </h2>
+            <p className="mt-5 leading-relaxed text-ink-muted">
+              We don&apos;t sell cheaper care. We make the care you already need faster to reach,
+              easier to understand, and better coordinated.
+            </p>
+          </div>
 
-        {/* Benefits Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {benefits.map((benefit) => {
-            const colors = colorClasses[benefit.color as keyof typeof colorClasses];
-            return (
-              <div key={benefit.category} className="space-y-6">
-                {/* Category Header */}
-                <div className="flex items-center space-x-3">
-                  <div className={`p-3 ${colors.bg} ${colors.text} rounded-lg`}>
-                    {benefit.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900">{benefit.category}</h3>
-                </div>
-
-                {/* Items */}
-                <div className="space-y-4">
-                  {benefit.items.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-4 border-l-4 ${colors.border} bg-gray-50 rounded-r-lg hover:shadow-md transition`}
-                    >
-                      <h4 className="font-semibold text-gray-900 mb-1">{item.title}</h4>
-                      <p className="text-sm text-gray-600">{item.description}</p>
+          {/* Benefit groups */}
+          <div className="divide-y divide-line border-y border-line">
+            {benefits.map((group) => (
+              <div key={group.category} className="grid gap-6 py-8 sm:grid-cols-[9rem_1fr]">
+                <h3 className="text-sm font-medium text-accent">{group.category}</h3>
+                <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
+                  {group.items.map((item) => (
+                    <div key={item.title}>
+                      <dt className="font-medium text-ink">{item.title}</dt>
+                      <dd className="mt-1 text-sm leading-relaxed text-ink-muted">{item.description}</dd>
                     </div>
                   ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Additional Services */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 md:p-12">
-          <h3 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Premium Services Available
-          </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: 'Medical Tourism',
-                description: 'Coordination for treatments abroad',
-                price: '$500-1,000',
-              },
-              {
-                title: 'Complex Case Management',
-                description: 'For serious medical conditions',
-                price: '$200-500',
-              },
-              {
-                title: 'Insurance Navigation',
-                description: 'Help with claims and approvals',
-                price: '$100-200',
-              },
-              {
-                title: 'Wellness Programs',
-                description: 'Diabetes, weight loss coaching',
-                price: '$50-75/mo',
-              },
-            ].map((service, idx) => (
-              <div key={idx} className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition">
-                <h4 className="font-semibold text-gray-900 mb-2">{service.title}</h4>
-                <p className="text-sm text-gray-600 mb-3">{service.description}</p>
-                <p className="text-[#0066cc] font-semibold">{service.price}</p>
+                </dl>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { value: '95%', label: 'Member Satisfaction' },
-            { value: '< 2 days', label: 'Average Appointment Wait' },
-            { value: '10k+', label: 'Appointments Coordinated' },
-            { value: '24/7', label: 'Support Availability' },
-          ].map((stat, idx) => (
-            <div key={idx} className="text-center">
-              <div className="text-4xl font-bold text-[#0066cc] mb-2">{stat.value}</div>
-              <div className="text-gray-600">{stat.label}</div>
-            </div>
-          ))}
+        {/* Additional Services */}
+        <div className="mt-24">
+          <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+            <h3 className="font-display text-3xl tracking-tight">Add-on services</h3>
+            <p className="text-sm text-ink-muted">Available on any plan, priced per case.</p>
+          </div>
+          <ul className="mt-6 divide-y divide-line border-y border-line">
+            {services.map((service) => (
+              <li key={service.title} className="grid gap-1 py-5 sm:grid-cols-[1fr_1.4fr_auto] sm:items-baseline sm:gap-8">
+                <span className="font-medium text-ink">{service.title}</span>
+                <span className="text-sm text-ink-muted">{service.description}</span>
+                <span className="text-sm tabular-nums text-ink sm:text-right">{service.price}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
