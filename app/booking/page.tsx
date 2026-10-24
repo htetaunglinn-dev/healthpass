@@ -185,8 +185,11 @@ export default function Booking() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen pt-16">
-        <div className="container-page py-10 md:py-14">
+      <main className="relative min-h-screen pt-16">
+        <div className="absolute inset-x-0 top-16 h-[13.5rem] overflow-hidden border-b border-line bg-sage" aria-hidden="true">
+          <div className="bg-grid absolute inset-0" />
+        </div>
+        <div className="container-page relative py-10 md:py-14">
           {/* Header */}
           <div className="max-w-2xl">
             <p className="eyebrow mb-3">Book an appointment</p>

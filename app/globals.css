@@ -21,6 +21,8 @@
   --color-accent: #1e5a4c;
   --color-accent-hover: #164338;
   --color-accent-soft: #e6efea;
+  --color-accent-deep: #123a31;
+  --color-sage: #e8eee8;
 
   --color-caution: #8a5a0b;
   --color-caution-soft: #f8eedb;
@@ -100,4 +102,13 @@ body {
   &[aria-pressed="true"] {
     @apply border-accent bg-accent-soft;
   }
+}
+
+/* Faint graph-paper grid, faded out toward the edges. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line, rgb(30 90 76 / 0.08)) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line, rgb(30 90 76 / 0.08)) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 40%, transparent 100%);
 }

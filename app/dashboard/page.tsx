@@ -88,8 +88,11 @@ export default function Dashboard() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen pt-16">
-        <div className="container-page py-10 md:py-14">
+      <main className="relative min-h-screen pt-16">
+        <div className="absolute inset-x-0 top-16 h-64 overflow-hidden border-b border-line bg-sage" aria-hidden="true">
+          <div className="bg-grid absolute inset-0" />
+        </div>
+        <div className="container-page relative py-10 md:py-14">
           {/* Header */}
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
